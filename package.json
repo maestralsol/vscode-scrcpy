@@ -2,19 +2,20 @@
   "name": "scrcpy",
   "displayName": "scrcpy",
   "description": "Mirror, control, and record android device with scrcpy.",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "publisher": "ihsanis",
   "license": "SEE THE LICENSE FILE",
   "repository": "https://github.com/maestralsol/vscode-scrcpy",
   "icon": "icon.png",
   "engines": {
-    "vscode": "^1.34.0"
-  },
+		"vscode": "^1.71.0"
+	},
   "categories": [
     "Other"
   ],
   "activationEvents": [
     "onCommand:scrcpy.mirror",
+    "onCommand:scrcpy.mirrorAlwaysOnTop",
     "onCommand:scrcpy.mirrorBitRate",
     "onCommand:scrcpy.mirrorFrameRate",
     "onCommand:scrcpy.mirrorSize",
@@ -34,6 +35,11 @@
       {
         "command": "scrcpy.mirror",
         "title": "mirror",
+        "category": "scrcpy"
+      },
+      {
+        "command": "scrcpy.mirrorAlwaysOnTop",
+        "title": "mirror (always on top)",
         "category": "scrcpy"
       },
       {
@@ -106,10 +112,10 @@
   },
   "devDependencies": {
     "@types/node": "^12.12.0",
-    "@types/vscode": "^1.34.0",
+    "@types/vscode": "^1.71.0",
     "@typescript-eslint/eslint-plugin": "^3.0.2",
     "@typescript-eslint/parser": "^3.0.2",
     "eslint": "^7.1.0",
-    "typescript": "^3.9.4"
+    "typescript": "^4.8.3"
   }
 }

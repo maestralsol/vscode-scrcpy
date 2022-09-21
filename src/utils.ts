@@ -27,6 +27,28 @@ async function askForBitRate(): Promise<string | undefined> {
   return window.showInputBox({ placeHolder: 'Enter bit rate (e.g. 8M)' });
 }
 
+async function askForAlwaysOnTop(): Promise<boolean | undefined> {
+  const onTop = await window.showQuickPick(['Yes', 'No'], {
+    placeHolder: 'Display always on top?',
+  });
+
+  return onTop === 'Yes';
+}
+
+async function askForStayAwake(): Promise<boolean | undefined> {
+  const awake = await window.showQuickPick(['Yes', 'No'], {
+    placeHolder: 'Should the device stay awake?',
+  });
+  return awake === 'Yes';
+}
+
+async function askForTurnScreenOff(): Promise<boolean | undefined> {
+  const screenOff = await window.showQuickPick(['Yes', 'No'], {
+    placeHolder: 'Turn the display off?',
+  });
+  return screenOff === 'Yes';
+}
+
 async function askForFrameRate(): Promise<string | undefined> {
   return window.showInputBox({ placeHolder: 'Enter frame rate (e.g. 30)' });
 }
@@ -83,6 +105,9 @@ export {
   getCurrentDateTimeString,
   getDefaultRecordingPath,
   getDefaultFileName,
+  askForAlwaysOnTop,
+  askForStayAwake,
+  askForTurnScreenOff,
   askForBitRate,
   askForFrameRate,
   askForPath,

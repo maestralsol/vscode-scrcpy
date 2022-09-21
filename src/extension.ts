@@ -1,13 +1,14 @@
 import { commands, Disposable, ExtensionContext } from 'vscode';
 import {
-  mirror,
-  record,
   customBitRate,
+  customCrop,
+  customEverything,
   customFrameRate,
   customPath,
   customSize,
-  customCrop,
-  customEverything,
+  mirror,
+  mirrorWithAlwaysOnTop,
+  record
 } from './scrcpy';
 
 function register(
@@ -20,6 +21,7 @@ function register(
 export function activate(context: ExtensionContext) {
   const registrations = [
     register('scrcpy.mirror', mirror),
+    register('scrcpy.mirrorAlwaysOnTop', mirrorWithAlwaysOnTop),
     register('scrcpy.mirrorBitRate', () => customBitRate('mirror')),
     register('scrcpy.mirrorFrameRate', () => customFrameRate('mirror')),
     register('scrcpy.mirrorSize', () => customSize('mirror')),

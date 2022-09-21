@@ -7,6 +7,9 @@ interface Options {
   path?: string | undefined | null;
   size?: string | undefined | null;
   crop?: string | undefined | null;
+  alwaysOnTop?: boolean | undefined | null;
+  stayAwake?: boolean | undefined | null;
+  screenOff?: boolean| undefined | null;
 }
 
 export { Mode, Options };

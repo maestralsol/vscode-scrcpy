@@ -1,33 +1,49 @@
-import { window, commands, Uri } from 'vscode';
 import * as cp from 'child_process';
+import { commands, Uri, window } from 'vscode';
+import { Mode, Options } from './types';
 import {
-  getDefaultRecordingPath,
-  getDefaultFileName,
+  askForAlwaysOnTop,
   askForBitRate,
+  askForCrop,
   askForFrameRate,
   askForPath,
   askForSize,
-  askForCrop,
-  showNotSpecifiedMessage,
+  askForStayAwake,
+  askForTurnScreenOff,
+  getDefaultFileName,
+  getDefaultRecordingPath,
+  showNotSpecifiedMessage
 } from './utils';
-import { Options, Mode } from './types';
 
 function start(options: Options) {
-  const { bitrate, framerate, path, size, crop } = options;
-  const p =
-    options.mode === 'record' ? path || getDefaultRecordingPath() : undefined;
+  const {
+    bitrate,
+    framerate,
+    path,
+    size,
+    crop,
+    mode,
+    alwaysOnTop,
+    screenOff,
+    stayAwake,
+  } = options;
+
+  const p = mode === 'record' ? path || getDefaultRecordingPath() : undefined;
 
   const recordParam =
-    options.mode === 'record' ? `--record ${p}/${getDefaultFileName()}` : '';
+    mode === 'record' ? `--record ${p}/${getDefaultFileName()}` : '';
   const bitrateParam = bitrate ? `--bit-rate ${bitrate}` : '';
   const framerateParam = framerate ? `--max-fps ${framerate}` : '';
   const sizeParam = size ? `--max-size ${size}` : '';
   const cropParam = crop ? `--crop ${crop}` : '';
+  const alwaysOnTopParam = alwaysOnTop ? '--always-on-top' : '';
+  const stayAwakeParam = stayAwake ? '-w' : '';
+  const turnScreenOffParam = screenOff ? '-S' : '';
 
   showNotSpecifiedMessage(options);
 
   cp.exec(
-    `scrcpy ${recordParam} ${bitrateParam} ${framerateParam} ${sizeParam} ${cropParam}`,
+    `scrcpy ${recordParam} ${bitrateParam} ${framerateParam} ${sizeParam} ${cropParam} ${alwaysOnTopParam} ${turnScreenOffParam} ${stayAwakeParam}`,
     error => {
       if (error?.message?.includes('command not found')) {
         window
@@ -53,6 +69,17 @@ function mirror() {
 
 function record() {
   start({ mode: 'record' });
+}
+
+async function mirrorWithAlwaysOnTop() {
+  const awake = (await askForStayAwake()) || null;
+  const screenOff = (await askForTurnScreenOff()) || null;
+  start({
+    mode: 'mirror',
+    alwaysOnTop: true,
+    stayAwake: awake,
+    screenOff: screenOff,
+  });
 }
 
 async function customBitRate(mode: Mode) {
@@ -85,6 +112,10 @@ async function customEverything(mode: Mode) {
   const framerate = await askForFrameRate();
   const size = await askForSize();
   const crop = await askForCrop();
+  const awake = (await askForStayAwake()) || null;
+  const screenOff = (await askForTurnScreenOff()) || null;
+  const alwaysOnTop = (await askForAlwaysOnTop()) || null;
+
   let path;
   if (mode === 'record') {
     path = await askForPath();
@@ -96,11 +127,15 @@ async function customEverything(mode: Mode) {
     path: path || null,
     size: size || null,
     crop: crop || null,
+    stayAwake: awake,
+    screenOff: screenOff,
+    alwaysOnTop: alwaysOnTop,
   });
 }
 
 export {
   mirror,
+  mirrorWithAlwaysOnTop,
   record,
   customBitRate,
   customFrameRate,
